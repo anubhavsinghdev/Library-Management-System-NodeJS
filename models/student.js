@@ -6,7 +6,7 @@ const studentSchema = new mongoose.Schema({
     studentid: {
         type: String
     },
-    issuedBooks:{
+    issuedBooks: {
         type: [String]
     }
 })

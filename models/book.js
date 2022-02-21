@@ -3,13 +3,13 @@ const bookSchema = new mongoose.Schema({
     isbn: {
         type: String
     },
-    name:{
+    name: {
         type: String
     },
-    author:{
-        type:String
+    author: {
+        type: String
     },
-    quantity:{
+    quantity: {
         type: Number
     }
 })

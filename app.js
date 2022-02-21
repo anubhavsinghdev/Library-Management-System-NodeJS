@@ -9,9 +9,7 @@ const Student = require('./models/student');
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
-app.use(express.urlencoded({
-    extended: true
-}));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('public'));
 
@@ -118,7 +116,6 @@ app.get("/books", requireLogin, (req, res) => {
             res.render("books", { docs: "" });
         }
     })
-
 })
 
 app.post("/books/delete", (req, res) => {
@@ -129,8 +126,7 @@ app.post("/books/delete", (req, res) => {
         } else {
             res.redirect("/books")
         }
-    }
-    )
+    })
 })
 
 app.get("/add-user", requireLogin, (req, res) => {
@@ -174,8 +170,7 @@ app.post("/issue-books", (req, res) => {
                                 } else {
                                     res.render("message", { message: "Book Issued" });
                                 }
-                            }
-                            )
+                            })
                         }
                     })
                 } else {
@@ -205,8 +200,7 @@ app.post("/students/delete", (req, res) => {
         } else {
             res.redirect("/students")
         }
-    }
-    )
+    })
 })
 
 app.get("/return-book", requireLogin, (req, res) => {
@@ -237,11 +231,9 @@ app.post("/return-book", (req, res) => {
                         } else {
                             res.render("message", { message: "Book Returned" });
                         }
-                    }
-                    )
+                    })
                 }
-            }
-            )
+            })
         }
     })
 })

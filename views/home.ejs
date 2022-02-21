@@ -6,6 +6,9 @@
     <img class="d-block mx-auto mb-4" src="/images/logo.png" alt="" width="72" height="57">
     <h1 class="display-5 fw-bold">Library Management System</h1>
     <div class="col-lg-6 mx-auto">
+        <% if(currentUser != undefined) { %>
+            <p class="display-6 text-danger">Hello <%= currentUser %></p>
+        <% } %>
         <p class="lead mb-4">Welcome to Library Management System for Graphic Era Hill University, here the admin can
             add books, give books to students, return books etc.</p>
         <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">

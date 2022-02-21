@@ -24,7 +24,6 @@ app.use(session({
 }));
 app.use((req, res, next) => {
     res.locals.currentUser = req.session.username;
-    // res.locals.url = req.url;
     next();
 });
 const requireLogin = (req, res, next) => {
@@ -150,20 +149,52 @@ app.post("/add-user", (req, res) => {
     })
 })
 
-app.get("/issue-books", (req, res)=>{
+app.get("/issue-books", (req, res) => {
     res.render("issue-books");
 })
 
-app.post("/issue-books", (req, res)=>{
-    const {studentid, isbn} = req.body;
+app.post("/issue-books", (req, res) => {
+    const { studentid, isbn } = req.body;
+    Student.findOne({ studentid }, (err, docs) => {
+        if (docs) {
+            Book.findOne({ isbn }, (err, docs) => {
+                if (docs && docs.quantity >= 1) {
+                    let q = parseInt(docs.quantity);
+                    q -= 1;
+                    Book.updateOne({ isbn }, { quantity: q }, (err, docs) => {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            Student.findOneAndUpdate({ studentid }, {
+                                $push: {
+                                    issuedBooks: isbn
+                                }
+                            }, (err, docs) => {
+                                if (err) {
+                                    console.log(err)
+                                } else {
+                                    res.send("issued");
+                                }
+                            }
+                            )
+                        }
+                    })
+                } else {
+                    res.send("book not available");
+                }
+            })
+        } else {
+            res.send("Inavlid Student ID");
+        }
+    })
 })
 
-app.get("/students",requireLogin, (req, res)=>{
-    Student.find({}, (err, docs)=>{
-        if(docs){
-            res.render("students", {docs});
-        }else{
-            res.render("students", {docs: ""});
+app.get("/students", requireLogin, (req, res) => {
+    Student.find({}, (err, docs) => {
+        if (docs) {
+            res.render("students", { docs });
+        } else {
+            res.render("students", { docs: "" });
         }
     })
 })
@@ -177,6 +208,43 @@ app.post("/students/delete", (req, res) => {
         }
     }
     )
+})
+
+app.get("/return-book", requireLogin, (req, res) => {
+    res.render("return-book");
+})
+
+app.post("/return-book", (req, res) => {
+    const { studentid, isbn } = req.body;
+    Book.findOne({ isbn }, (err, docs) => {
+        if (docs) {
+            let q = parseInt(docs.quantity);
+            q += 1;
+            Book.findOneAndUpdate({ isbn }, {
+                $set: {
+                    quantity: q
+                }
+            }, (err, docs) => {
+                if (err) {
+                    console.log(err);
+                } else {
+                    Student.findOneAndUpdate({ studentid }, {
+                        $pull: {
+                            issuedBooks: isbn
+                        }
+                    }, (err, docs) => {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            res.send("return");
+                        }
+                    }
+                    )
+                }
+            }
+            )
+        }
+    })
 })
 
 app.get("/logout", (req, res) => {

@@ -14,10 +14,10 @@
             <div class="card-body">
                 <h5 class="card-title">Name : <%= docs[i].name %></h5>
                 <p class="card-text">Student ID : <%= docs[i].studentid %></p>
-                <p class="card-text">Issued Books :</p>
-                <p class="card-text">
+                <p class="card-text">Issued Books : <%= docs[i].issuedBooks.length %></p>
+                <p class="">ISBN :
                     <% for(let x = 0; x < docs[i].issuedBooks.length ; x++) { %>
-                    <%= docs[i].issuedBooks[x] %> <br>
+                    <%= docs[i].issuedBooks[x] %> ,
                     <% } %>
                 </p>
                 <form action="/students/delete" method="post">
@@ -33,4 +33,6 @@
 <h1 class="text-center">No Students in Library Database</h1>
 <% } %>
 
-<%- include("footer.ejs") -%>
+</body>
+
+</html>

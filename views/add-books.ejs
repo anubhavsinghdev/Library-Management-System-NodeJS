@@ -7,20 +7,20 @@
             <h1 class="h3 mb-3 fw-normal">Add Books Here</h1>
 
             <div class="form-floating">
-                <input type="text" class="form-control" id="floatingInput" placeholder="Book ISBN" name="isbn">
+                <input type="text" class="form-control" id="floatingInput" placeholder="Book ISBN" name="isbn" required>
                 <label for="floatingInput">Book ISNB</label>
             </div>
             <div class="form-floating">
-                <input type="text" class="form-control" id="floatingInput" placeholder="Book name" name="name">
+                <input type="text" class="form-control" id="floatingInput" placeholder="Book name" name="name" required>
                 <label for="floatingInput">Book Name</label>
             </div>
             <div class="form-floating">
-                <input type="text" class="form-control" id="floatingInput" placeholder="Book Author" name="author">
+                <input type="text" class="form-control" id="floatingInput" placeholder="Book Author" name="author" required>
                 <label for="floatingInput">Book Author</label>
             </div>
 
             <div class="form-floating">
-                <input type="number" class="form-control" id="floatingInput" placeholder="Quantity" name="quantity">
+                <input type="number" class="form-control" id="floatingInput" placeholder="Quantity" name="quantity" required>
                 <label for="floatingInput">Quantity</label>
             </div>
 
@@ -30,4 +30,5 @@
     </main>
 
 </body>
-<%- include("footer.ejs") -%>
+
+</html>

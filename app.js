@@ -6,7 +6,6 @@ mongoose.connect("mongodb://localhost:27017/LMS")
 const User = require('./models/user');
 const Book = require('./models/book');
 const Student = require('./models/student');
-const req = require("express/lib/request");
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
@@ -44,13 +43,13 @@ app.post("/sign-up", (req, res) => {
     const { username, password } = req.body;
     User.find({ username }, (err, docs) => {
         if (docs.length) {
-            res.send("user already created");
+            res.render("message", { message: "User Already Registered" });
         } else {
             User.create({ username: username, password: password }, (err, docs) => {
                 if (err) {
                     console.log(err);
                 } else {
-                    res.send("user created");
+                    res.render("message", { message: "User Registered" });
                 }
             })
         }
@@ -69,10 +68,10 @@ app.post("/login", (req, res) => {
                 req.session.username = username;
                 res.redirect("/");
             } else {
-                res.send("wrong username or password");
+                res.render("message", { message: "Wrong Username or Password" });
             }
         } else {
-            res.send("user not registered");
+            res.render("message", { message: "User Not Registered" });
         }
     })
 })
@@ -95,7 +94,7 @@ app.post("/add-books", (req, res) => {
                 if (err) {
                     console.log(err);
                 } else {
-                    res.send("updated");
+                    res.render("message", { message: "Book Updated" });
                 }
             })
         }
@@ -104,7 +103,7 @@ app.post("/add-books", (req, res) => {
                 if (err) {
                     console.log(err);
                 } else {
-                    res.send("added");
+                    res.render("message", { message: "Book Added" });
                 }
             })
         }
@@ -134,7 +133,7 @@ app.post("/books/delete", (req, res) => {
     )
 })
 
-app.get("/add-user", (req, res) => {
+app.get("/add-user", requireLogin, (req, res) => {
     res.render("add-user");
 })
 
@@ -149,7 +148,7 @@ app.post("/add-user", (req, res) => {
     })
 })
 
-app.get("/issue-books", (req, res) => {
+app.get("/issue-books", requireLogin, (req, res) => {
     res.render("issue-books");
 })
 
@@ -173,18 +172,18 @@ app.post("/issue-books", (req, res) => {
                                 if (err) {
                                     console.log(err)
                                 } else {
-                                    res.send("issued");
+                                    res.render("message", { message: "Book Issued" });
                                 }
                             }
                             )
                         }
                     })
                 } else {
-                    res.send("book not available");
+                    res.render("message", { message: "Book Not Available" });
                 }
             })
         } else {
-            res.send("Inavlid Student ID");
+            res.render("message", { message: "Invalid Student ID" });
         }
     })
 })
@@ -236,7 +235,7 @@ app.post("/return-book", (req, res) => {
                         if (err) {
                             console.log(err);
                         } else {
-                            res.send("return");
+                            res.render("message", { message: "Book Returned" });
                         }
                     }
                     )
@@ -245,6 +244,10 @@ app.post("/return-book", (req, res) => {
             )
         }
     })
+})
+
+app.get("/message", (req, res) => {
+    res.render("message", { message: "Hello There!!" });
 })
 
 app.get("/logout", (req, res) => {

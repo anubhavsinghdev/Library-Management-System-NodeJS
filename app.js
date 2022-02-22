@@ -2,10 +2,14 @@ const express = require("express");
 const app = express();
 const mongoose = require('mongoose');
 const session = require('express-session');
+const fs = require("fs");
+const path = require("path");
 mongoose.connect("mongodb://localhost:27017/LMS")
 const User = require('./models/user');
 const Book = require('./models/book');
 const Student = require('./models/student');
+let studentsData = fs.readFileSync(path.resolve(__dirname, 'student.json'));
+let booksData = fs.readFileSync(path.resolve(__dirname, 'books.json'));
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
@@ -75,6 +79,19 @@ app.post("/login", (req, res) => {
 })
 
 app.get("/add-books", requireLogin, (req, res) => {
+    Book.find({}, (err, docs) => {
+        if (!docs || docs.length === 0) {
+            const books = JSON.parse(booksData);
+            for (let i = 0; i < books.length; i++) {
+                const { isbn, name, author, quantity } = books[i];
+                Book.create({ isbn: isbn, name: name, author: author, quantity: quantity }, (err, docs) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                })
+            }
+        }
+    })
     res.render("add-books");
 })
 
@@ -130,6 +147,19 @@ app.post("/books/delete", (req, res) => {
 })
 
 app.get("/add-user", requireLogin, (req, res) => {
+    Student.find({}, (err, docs) => {
+        if (!docs || docs.length === 0) {
+            const students = JSON.parse(studentsData);
+            for (let i = 0; i < students.length; i++) {
+                const { name, studentid } = students[i];
+                Student.create({ name: name, studentid: studentid }, (err, docs) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                })
+            }
+        }
+    })
     res.render("add-user");
 })
 

@@ -4,7 +4,12 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const fs = require("fs");
 const path = require("path");
-mongoose.connect("mongodb://localhost:27017/LMS")
+const dotenv = require('dotenv')
+dotenv.config()
+mongoose.connect(process.env.DB)
+    .then(() => console.log("DB Connected"))
+    .catch(() => console.log("Error Connecting to DB"))
+
 const User = require('./models/user');
 const Book = require('./models/book');
 const Student = require('./models/student');
@@ -277,6 +282,6 @@ app.get("/logout", (req, res) => {
     res.redirect("/");
 })
 
-app.listen(3000, () => {
-    console.log("On 3000!");
+app.listen(process.env.PORT, () => {
+    console.log("On " + process.env.PORT);
 })
